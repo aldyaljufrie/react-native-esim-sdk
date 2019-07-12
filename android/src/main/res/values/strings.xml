@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ESIM SDK</string>
+
+    <string name="print_qr_code">https://mynameisdav.com</string>
+    <string name="print_bar_code_65">114755574123</string>
+    <string name="print_bar_code_73">114755574123mynameisdav</string>
+    <string name="print_text">"
+          Test printer
+          〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+             Barang                   Qty       Harga
+          1  Test item 1
+          9940228004700     39.90      1       1000
+          2  Test item 2
+          9961008002200     9.00       2       20000
+          3  Test item 3
+          6921644701203     51.80      1       3000
+          --------------------------------------------
+          Total Qty：4           Total Harga： 24000
+          〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓\n"
+    </string>
+</resources>

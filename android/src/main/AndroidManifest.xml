@@ -1,0 +1,31 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.esimsdk">
+
+          <uses-feature android:name="android.hardware.usb.host" />
+          <!-- WIFIManage permission -->
+          <!-- Allows applications to access information about networks -->
+          <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+          <!-- Allows applications to access information about Wi-Fi networks -->
+          <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+          <!-- Allows applications to change network connectivity state -->
+          <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+          <!-- Allows applications to change network connectivity state -->
+          <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+          <!-- Allows applications to enter Wi-Fi Multicast mode -->
+          <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+          <uses-permission android:name="android.permission.WAKE_LOCK" />
+          <!-- Internet permission -->
+          <uses-permission android:name="android.permission.INTERNET" >
+          </uses-permission>
+
+          <!-- SDCard permission -->
+          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+          <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+          <!-- If your application uses Wi-Fi, declare so with a <uses-feature> element in the manifest file -->
+          <uses-feature android:name="android.hardware.wifi" />
+
+          <!-- Bluetooth permission -->
+          <uses-permission android:name="android.permission.BLUETOOTH" />
+          <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+</manifest>
