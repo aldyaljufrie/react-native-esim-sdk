@@ -56,18 +56,16 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 String errorMsg;
+                int ret;
                 try {
-                    if (mPrinter.isConnect()) {
-                        mPrinter.disconnect();
-                    }
+                    if (mPrinter.isConnect()) mPrinter.disconnect();
 
                     InterfaceAPI io = new USBAPI(getCurrentActivity());
-                    int ret = mPrinter.connect(io);
-                    if (PrinterAPI.SUCCESS == ret) {
-                        errorMsg = "Connect printer success";
-                    } else {
-                        errorMsg = "Connect printer fail, ret = " + ret;
-                    }
+                    ret = mPrinter.connect(io);
+                    if (PrinterAPI.SUCCESS == ret)
+                      errorMsg = "CONNECTED";
+                    else
+                      errorMsg = "DISCONNECTED";
                 } catch (Exception ex) {
                     errorMsg = "Request printer permission fail: " + ex.getMessage();
                 }
@@ -78,21 +76,26 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void TestPrint(Callback c){
+    public void PrintText (String t, Callback c){
         if (c != null) callback = c;
-
+        if (t == null || t.isEmpty()){
+            ShowErrorMsg("Text content cannot be empty!");
+            return;
+        }
+        final String text = t;
         runnable = new Runnable() {
             @Override
             public void run() {
                 int ret;
                 try {
                     if (!mPrinter.isConnect()) {
-                        ShowErrorMsg("Printer do not connect, please check the hardware and try restart app");
+                        ShowErrorMsg("DISCONNECTED");
                         return;
                     }
+
                     //mPrinter.setAlignMode(1);
                     mPrinter.setFontStyle(0);
-                    ret = mPrinter.printString(getCurrentActivity().getString(R.string.print_text), "GBK", true);
+                    ret = mPrinter.printString(text);
                     if (PrinterAPI.SUCCESS == ret) {
                         Log.i("print", "Print text success");
                     } else {
@@ -103,31 +106,36 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     ShowErrorMsg("Print text catch exception: " + e.getMessage());
                     return;
                 }
+                CutPaper();
+            }
+      };
+      new Thread(runnable).start();
+    }
 
-//                 try {
-//                     mPrinter.initAllPrinter(2);
-//                     @SuppressLint("ResourceType") InputStream is = reactContext.getResources().openRawResource(R.drawable.test);
-//                     Bitmap drawingCache = BitmapFactory.decodeStream(is);
-//                     // The appropriate pixel width of printer paper is about 500
-//                     // Scale the image width and height according the pixel width of printer paper firstly
-//                     Bitmap scaleCache = scaleBitmapByWidth(drawingCache, 500);
-//                     ret = mPrinter.printRasterBitmap(scaleCache, true, 2000, false);
-// //                    ret = mPrinter.printRasterBitmap(BitmapUtils.toGrays(drawingCache));
-//                     if (PrinterAPI.SUCCESS == ret) {
-//                         ShowErrorMsg("Print image success");
-//                     } else {
-//                         ShowErrorMsg("Print image fail, ret = " + ret);
-//                     }
-//                 } catch (IOException e) {
-//                     ShowErrorMsg("Print image catch exception: " + e.getMessage());
-//                 }
+    @ReactMethod
+    public void PrintBarcode (String code, Integer barcodeWidth, Callback c){
+        if (c != null) callback = c;
+        if (code == null){
+            ShowErrorMsg("Barcode content cannot be empty!");
+            return;
+        }
+        barcodeWidth = barcodeWidth != null ? barcodeWidth : 2;
 
-                mPrinter.printFeed();
-                mPrinter.initAllPrinter(2);
+        final String barcode = code;
+        final Integer width = barcodeWidth;
 
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                int ret;
                 try {
-                    mPrinter.setBarCodeWidth(2);
-                    String barCode = getCurrentActivity().getString(R.string.print_bar_code_73);
+                    if (!mPrinter.isConnect()) {
+                        ShowErrorMsg("DISCONNECTED");
+                        return;
+                    }
+
+                    mPrinter.setBarCodeWidth(width);
+                    String barCode = barcode;
                     ret = mPrinter.printBarCode(73, barCode.length(), barCode);
                     if (PrinterAPI.SUCCESS == ret) {
                         Log.e("print","Print bar code success");
@@ -139,13 +147,36 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     ShowErrorMsg("Print bar code catch exception: " + e.getMessage());
                     return;
                 }
-//
-                mPrinter.printFeed();
+                CutPaper();
+            }
+        };
+        new Thread(runnable).start();
+    }
 
+    @ReactMethod
+    public void PrintQRCode (String code, Integer qrSize, Callback c){
+        if (c != null) callback = c;
+        if (code == null){
+            ShowErrorMsg("Barcode content cannot be empty!");
+            return;
+        }
+        qrSize = qrSize != null ? qrSize : 5;
+
+        final String qrcode = code;
+        final Integer size = qrSize;
+
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                int ret;
                 try {
-                    mPrinter.setBarCodeWidth(2);
-                    String qrCode = getCurrentActivity().getString(R.string.print_qr_code);
-                    ret = mPrinter.printQRCode(qrCode, 5, false);
+                    if (!mPrinter.isConnect()) {
+                        ShowErrorMsg("DISCONNECTED");
+                        return;
+                    }
+
+                    String qrCode = qrcode;
+                    ret = mPrinter.printQRCode(qrCode, size, false);
                     if (PrinterAPI.SUCCESS == ret) {
                         mPrinter.printFeed();
                         Log.e("print","Print QR code success");
@@ -157,19 +188,20 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     ShowErrorMsg("Print QR code catch exception: " + e.getMessage());
                     return;
                 }
-
-                ret = mPrinter.cutPaper(66, 0);
-                if (PrinterAPI.SUCCESS == ret) {
-                    Log.e("print","Cut paper success");
-                } else {
-                    ShowErrorMsg("Cut paper fail, ret = " + ret);
-                    return;
-                }
-
-                ShowErrorMsg("Print runner is done!");
+                CutPaper();
             }
         };
         new Thread(runnable).start();
+    }
+
+    public void CutPaper (){
+      int ret = mPrinter.cutPaper(66, 0);
+      if (PrinterAPI.SUCCESS == ret) {
+          Log.e("print","Cut paper success");
+      } else {
+          ShowErrorMsg("Cut paper fail, ret = " + ret);
+          return;
+      }
     }
 
     private void ShowErrorMsg(final String error){
