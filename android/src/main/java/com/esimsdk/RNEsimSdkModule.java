@@ -219,9 +219,9 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
 
                     mPrinter.setFontStyle(0);
                     mPrinter.setAlignMode(0);
-                    mPrinter.printString(brand + " - " + branch);
-                    mPrinter.setAlignMode(2);
-                    mPrinter.printString(dateNow);
+                    mPrinter.printString(brand + "                     " + dateNow);
+                    mPrinter.printFeed();
+                    mPrinter.printString(branch);
                     mPrinter.printFeed();
 
                     mPrinter.setAlignMode(0);
@@ -235,10 +235,7 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                         String qty = rmItem.getString("qty");
                         String price = rmItem.getString("price");
 
-                        mPrinter.setAlignMode(0);
-                        mPrinter.printString(qty + " X " + name);
-                        mPrinter.setAlignMode(2);
-                        mPrinter.printString(price);
+                        mPrinter.printString(qty + " X " + name + "           Rp. " + price);
                         mPrinter.printFeed();
                         mPrinter.printFeed();
                     }
@@ -247,17 +244,11 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
-                    mPrinter.setAlignMode(0);
-                    mPrinter.printString("Total Harga Produk");
-                    mPrinter.setAlignMode(2);
-                    mPrinter.printString("Rp. " + totalPrice);
+                    mPrinter.printString("Total Harga Produk            Rp." + totalPrice);
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
-                    mPrinter.setAlignMode(0);
-                    mPrinter.printString("Biaya Pengiriman");
-                    mPrinter.setAlignMode(2);
-                    mPrinter.printString("Rp. " + logisticPrice);
+                    mPrinter.printString("Biaya Pengiriman              Rp." + logisticPrice);
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
@@ -266,16 +257,25 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printFeed();
 
                     mPrinter.setAlignMode(2);
-                    mPrinter.printString("TOTAL Rp " + totalAll);
+                    mPrinter.printString("TOTAL Rp." + totalAll);
                     mPrinter.printFeed();
                     mPrinter.printString("Harga sudah termasuk PPN 10%");
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
-                    mPrinter.setAlignMode(0);
-                    mPrinter.printString("Metode Pembayaran         : " + paymentString);
+                    if (payment.equals("midtrans")) {
+                        mPrinter.setAlignMode(0);
+                        mPrinter.printString("Metode Pembayaran       : " + paymentString);
+                    } else {
+                        mPrinter.setAlignMode(2);
+                        mPrinter.printString("Metode Pembayaran");
+                        mPrinter.printFeed();
+                        mPrinter.printQRCode(paymentString, 5, false);
+                        mPrinter.setAlignMode(0);
+                    }
+
                     mPrinter.printFeed();
-                    mPrinter.printString("Batas Waktu Pembayaran    : " + nextDay);
+                    mPrinter.printString("Batas Waktu Pembayaran  : " + nextDay);
                     mPrinter.printFeed();
 
                     mPrinter.printString("------------------------------------------------");
@@ -288,7 +288,14 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printString("Customer Service di");
                     mPrinter.printFeed();
                     mPrinter.printFeed();
-                    mPrinter.printString("1500 860");
+                    mPrinter.setAlignMode(0);
+                    mPrinter.printString("1500");
+                    mPrinter.printFeed();
+                    mPrinter.setAlignMode(2);
+                    mPrinter.printString("860");
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
                     mPrinter.cutPaper(66, 0);
 
                 } catch (UnsupportedEncodingException e) {
