@@ -17,6 +17,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 
 import com.esimtek.fsdk.FSdk;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.szsicod.print.escpos.PrinterAPI;
 import com.szsicod.print.io.InterfaceAPI;
 import com.szsicod.print.io.USBAPI;
@@ -64,9 +66,9 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     InterfaceAPI io = new USBAPI(getCurrentActivity());
                     ret = mPrinter.connect(io);
                     if (PrinterAPI.SUCCESS == ret)
-                      errorMsg = "CONNECTED";
+                        errorMsg = "CONNECTED";
                     else
-                      errorMsg = "DISCONNECTED";
+                        errorMsg = "DISCONNECTED";
                 } catch (Exception ex) {
                     errorMsg = "Request printer permission fail: " + ex.getMessage();
                 }
@@ -193,42 +195,122 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void printReceipt(final ReadableMap paymentType, final ReadableMap brandInfo, final ReadableArray items, final ReadableMap cost, final ReadableMap dates, Callback c){
+        if (c != null) callback = c;
+
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!mPrinter.isConnect()) {
+                    ShowMsg("DISCONNECTED");
+                    return;
+                }
+                try {
+                    String brand = brandInfo.getString("client");
+                    String branch = brandInfo.getString("branch");
+                    String dateNow = dates.getString("dateNow");
+                    String nextDay = dates.getString("nextDay");
+                    String totalPrice = cost.getString("totalPrice");
+                    String logisticPrice = cost.getString("logisticPrice");
+                    String totalAll = cost.getString("totalAll");
+                    String payment = paymentType.getString("type");
+                    String paymentData = paymentType.getString("data");
+                    String paymentString = (payment == "midtrans") ? "Transver VA ( " + paymentData + " )" : paymentData;
+
+                    mPrinter.setFontStyle(0);
+                    mPrinter.setAlignMode(0);
+                    mPrinter.printString(brand + " - " + branch);
+                    mPrinter.setAlignMode(2);
+                    mPrinter.printString(dateNow);
+                    mPrinter.printFeed();
+
+                    mPrinter.setAlignMode(0);
+                    mPrinter.printString("------------------------------------------------");
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    for (int i = 0; i < items.size(); i++){
+                        ReadableMap rmItem = items.getMap(i);
+                        String name = rmItem.getString("name");
+                        String qty = rmItem.getString("qty");
+                        String price = rmItem.getString("price");
+
+                        mPrinter.setAlignMode(0);
+                        mPrinter.printString(qty + " X " + name);
+                        mPrinter.setAlignMode(2);
+                        mPrinter.printString(price);
+                        mPrinter.printFeed();
+                        mPrinter.printFeed();
+                    }
+
+                    mPrinter.printString("--  --  --  --  --  --  --  --  --  --  --  --  ");
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    mPrinter.setAlignMode(0);
+                    mPrinter.printString("Total Harga Produk");
+                    mPrinter.setAlignMode(2);
+                    mPrinter.printString("Rp. " + totalPrice);
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    mPrinter.setAlignMode(0);
+                    mPrinter.printString("Biaya Pengiriman");
+                    mPrinter.setAlignMode(2);
+                    mPrinter.printString("Rp. " + logisticPrice);
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    mPrinter.printString("--  --  --  --  --  --  --  --  --  --  --  --  ");
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    mPrinter.setAlignMode(2);
+                    mPrinter.printString("TOTAL Rp " + totalAll);
+                    mPrinter.printFeed();
+                    mPrinter.printString("Harga sudah termasuk PPN 10%");
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    mPrinter.setAlignMode(0);
+                    mPrinter.printString("Metode Pembayaran         : " + paymentString);
+                    mPrinter.printFeed();
+                    mPrinter.printString("Batas Waktu Pembayaran    : " + nextDay);
+                    mPrinter.printFeed();
+
+                    mPrinter.printString("------------------------------------------------");
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    mPrinter.setAlignMode(1);
+                    mPrinter.printString("Jika ada pertanyaan lanjutan silahkan hubungi");
+                    mPrinter.printFeed();
+                    mPrinter.printString("Customer Service di");
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+                    mPrinter.printString("1500 860");
+
+                } catch (UnsupportedEncodingException e) {
+                    ShowMsg("Print text catch exception: " + e.getMessage());
+                    return;
+                }
+                ShowMsg("SUCCESS");
+            }
+        };
+        new Thread(runnable).start();
+    }
+
+    @ReactMethod
     public void CutPaper (Callback c){
-      if(c != null) callback = c;
-      String errorMsg;
-      int ret = mPrinter.cutPaper(66, 0);
-      if (PrinterAPI.SUCCESS == ret) {
-          errorMsg = "CUTPAPER SUCCESS";
-      } else {
-          errorMsg = "Cut paper fail, ret = " + ret;
-      }
-      ShowMsg(errorMsg);
-    }
-
-    @ReactMethod
-    public void setAlignMode(String t){
-        int type = 0;
-        switch (t){
-            case "left":
-                type = 0;
-                break;
-            case "center":
-                type = 1;
-                break;
-            case "right":
-                type = 2;
-                break;
+        if(c != null) callback = c;
+        String errorMsg;
+        int ret = mPrinter.cutPaper(66, 0);
+        if (PrinterAPI.SUCCESS == ret) {
+            errorMsg = "CUTPAPER SUCCESS";
+        } else {
+            errorMsg = "Cut paper fail, ret = " + ret;
         }
-        mPrinter.setAlignMode(type);
-    }
-
-    @ReactMethod
-    public void fontSizeSet(int n){
-        mPrinter.fontSizeSet(n);
-    }
-
-    public int getPrinterStatus(){
-        return mPrinter.getStatusForPrinting(1000);
+        ShowMsg(errorMsg);
     }
 
     private void ShowMsg(final String msg){
