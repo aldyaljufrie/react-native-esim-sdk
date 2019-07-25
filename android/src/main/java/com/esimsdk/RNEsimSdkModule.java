@@ -266,15 +266,16 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     if (payment.equals("midtrans")) {
                         mPrinter.setAlignMode(0);
                         mPrinter.printString("Metode Pembayaran       : " + paymentString);
+                        mPrinter.printFeed();
                     } else {
                         mPrinter.setAlignMode(2);
                         mPrinter.printString("Metode Pembayaran");
                         mPrinter.printFeed();
                         mPrinter.printQRCode(paymentString, 5, false);
+                        mPrinter.printFeed();
                         mPrinter.setAlignMode(0);
                     }
 
-                    mPrinter.printFeed();
                     mPrinter.printString("Batas Waktu Pembayaran  : " + nextDay);
                     mPrinter.printFeed();
 
