@@ -289,6 +289,7 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printFeed();
                     mPrinter.printFeed();
                     mPrinter.printString("1500 860");
+                    mPrinter.cutPaper(66, 0);
 
                 } catch (UnsupportedEncodingException e) {
                     ShowMsg("Print text catch exception: " + e.getMessage());
@@ -301,8 +302,7 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void CutPaper (Callback c){
-        if(c != null) callback = c;
+    public void CutPaper (){
         String errorMsg;
         int ret = mPrinter.cutPaper(66, 0);
         if (PrinterAPI.SUCCESS == ret) {

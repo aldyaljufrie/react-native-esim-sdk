@@ -3,7 +3,7 @@
 
 ## Getting started
 
-`$ npm install git+https://github.com/aldyaljufrie/react-native-esim-sdk.git --save`
+`$ npm install git+https://github.com/aldyaljufrie/react-native-esim-sdk.git#development --save`
 
 ### Mostly automatic installation
 
@@ -32,14 +32,5 @@ import RNEsimSdk from 'react-native-esim-sdk';
 // TODO: What to do with the module?
 
 // init printer SDK
-RNEsimSdk.InitPrinter(callback);
-
-// print text
-RNEsimSdk.PrintText(text, callback);
-
-// print barcode
-RNEsimSdk.PrintBarcode(barcodeContent, BarcodeWidth, callback);
-
-// print QR Code
-RNEsimSdk.PrintQRCode(QRCodeContent, QRCodeSize, callback);
+RNEsimSdk.printReceipt(...params);
 ```
