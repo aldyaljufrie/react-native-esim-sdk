@@ -217,11 +217,23 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     String paymentData = paymentType.getString("data");
                     String paymentString = (payment == "midtrans") ? "Transver VA ( " + paymentData + " )" : paymentData;
 
-                    mPrinter.setFontStyle(0);
-                    mPrinter.setAlignMode(0);
-                    mPrinter.printString(brand + "                     " + dateNow);
+                    mPrinter.setFontStyle(1);
+                    mPrinter.fontSizeSet(3);
+                    mPrinter.setAlignMode(1);
+                    mPrinter.printString("DÄV");
                     mPrinter.printFeed();
-                    mPrinter.printString(branch);
+                    mPrinter.setFontStyle(1);
+                    mPrinter.fontSizeSet(1);
+                    mPrinter.printString("In partnership with Alfamart");
+
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+                    mPrinter.setAlignMode(0);
+                    mPrinter.printString(brand + " - " + branch);
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+                    mPrinter.setAlignMode(2);
+                    mPrinter.printString(dateNow);
                     mPrinter.printFeed();
 
                     mPrinter.setAlignMode(0);
@@ -235,20 +247,25 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                         String qty = rmItem.getString("qty");
                         String price = rmItem.getString("price");
 
-                        mPrinter.printString(qty + " X " + name + "           Rp. " + price);
+                        mPrinter.setAlignMode(0);
+                        mPrinter.printString(qty + " X " + name);
+                        mPrinter.printFeed();
+                        mPrinter.setAlignMode(2);
+                        mPrinter.printString("Rp." + price);
                         mPrinter.printFeed();
                         mPrinter.printFeed();
                     }
 
+                    mPrinter.setAlignMode(0);
                     mPrinter.printString("--  --  --  --  --  --  --  --  --  --  --  --  ");
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
-                    mPrinter.printString("Total Harga Produk            Rp." + totalPrice);
+                    mPrinter.printString("Total Harga Produk                Rp." + totalPrice);
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
-                    mPrinter.printString("Biaya Pengiriman              Rp." + logisticPrice);
+                    mPrinter.printString("Biaya Pengiriman                  Rp." + logisticPrice);
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
@@ -268,10 +285,11 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                         mPrinter.printString("Metode Pembayaran       : " + paymentString);
                         mPrinter.printFeed();
                     } else {
-                        mPrinter.setAlignMode(2);
+                        mPrinter.setAlignMode(1);
                         mPrinter.printString("Metode Pembayaran");
                         mPrinter.printFeed();
-                        mPrinter.printQRCode(paymentString, 5, false);
+                        mPrinter.printFeed();
+                        mPrinter.printQRCode(paymentString, 100, false);
                         mPrinter.printFeed();
                         mPrinter.setAlignMode(0);
                     }
@@ -289,11 +307,11 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printString("Customer Service di");
                     mPrinter.printFeed();
                     mPrinter.printFeed();
-                    mPrinter.setAlignMode(0);
-                    mPrinter.printString("1500");
+                    mPrinter.printString("1500 860");
                     mPrinter.printFeed();
-                    mPrinter.setAlignMode(2);
-                    mPrinter.printString("860");
+                    mPrinter.printFeed();
+                    mPrinter.smallFontSizeSet();
+                    mPrinter.printString("Hak cipta dilindungi oleh undang-undang");
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
