@@ -9,6 +9,7 @@ import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -217,14 +218,19 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     String paymentData = paymentType.getString("data");
                     String paymentString = (payment == "midtrans") ? "Transver VA ( " + paymentData + " )" : paymentData;
 
-                    mPrinter.setFontStyle(1);
-                    mPrinter.fontSizeSet(3);
+                    // try {
+                    //     byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+                    //     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    //     mPrinter.printRasterBitmap(decodedByte, false);
+                    // } catch (IOException e) {
+                    //     Log.e("print", "Print image catch exception: " + e.getMessage());
+                    // }
+
+                    mPrinter.setFontStyle(0);
                     mPrinter.setAlignMode(1);
-                    mPrinter.printString("DÄV");
+                    mPrinter.printString("DAV");
                     mPrinter.printFeed();
-                    mPrinter.setFontStyle(1);
-                    mPrinter.fontSizeSet(1);
-                    mPrinter.printString("In partnership with Alfamart");
+                    mPrinter.printString("In partnership with " + brand);
 
                     mPrinter.printFeed();
                     mPrinter.printFeed();
