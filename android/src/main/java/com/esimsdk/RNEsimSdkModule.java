@@ -301,6 +301,10 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printFeed();
                     mPrinter.printString("1500 860");
                     mPrinter.printFeed();
+                    mPrinter.printString("atau");
+                    mPrinter.printFeed();
+                    mPrinter.printString("cs@alfadigital.id");
+                    mPrinter.printFeed();
 
                     mPrinter.cutPaper(66, 0);
 
