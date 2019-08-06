@@ -247,9 +247,10 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                         String name = rmItem.getString("name");
                         String qty = rmItem.getString("qty");
                         String price = rmItem.getString("price");
+                        boolean subName = (name.length() >= 25) ? true : false;
 
                         mPrinter.setAlignMode(0);
-                        mPrinter.printString(qty + " X " + name.substring(0, 25));
+                        mPrinter.printString(qty + " X " + (subName ? name.substring(0, 25) + "..." : name));
                         mPrinter.printFeed();
                         mPrinter.setAlignMode(2);
                         mPrinter.printString("Rp." + price);
@@ -260,10 +261,10 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printString("--  --  --  --  --  --  --  --  --  --  --  --  ");
                     mPrinter.printFeed();
 
-                    mPrinter.printString("Total Harga Produk                          Rp." + totalPrice);
+                    mPrinter.printString("Total Harga Produk                        Rp." + totalPrice);
                     mPrinter.printFeed();
 
-                    mPrinter.printString("Biaya Pengiriman                            Rp." + logisticPrice);
+                    mPrinter.printString("Biaya Pengiriman                          Rp." + logisticPrice);
                     mPrinter.printFeed();
 
                     mPrinter.printString("--  --  --  --  --  --  --  --  --  --  --  --  ");
