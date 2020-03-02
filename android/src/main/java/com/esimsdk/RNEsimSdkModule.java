@@ -221,7 +221,7 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                 // cost objects
                 String totalPrice = cost.getString("totalPrice");
                 String diskon = cost.getString("diskon");
-                String diskonOnkir = cost.getString("diskonOnkir");
+                String diskonOngkir = cost.getString("diskonOngkir");
                 String logisticPrice = cost.getString("logisticPrice");
                 String totalAll = cost.getString("totalAll");
 
@@ -239,7 +239,6 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                 try {
                     mPrinter.setAlignMode(1);
                     try {
-                        Bitmap logo = BitmapFactory.decodeResources(context.getResources(), R.drawable.logo_black)
                         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                         mPrinter.printRasterBitmap(decodedByte, true);
@@ -297,7 +296,7 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printFeed();
                     mPrinter.printString("Diskon : -Rp." + diskon);
                     mPrinter.printFeed();
-                    mPrinter.printString("Diskon Ongkir : -Rp." + diskonOnkir);
+                    mPrinter.printString("Diskon Ongkir : -Rp." + diskonOngkir);
                     mPrinter.printFeed();
 
 
@@ -310,7 +309,7 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
-                    mPrinter.setFontStyle(1)
+                    mPrinter.setFontStyle(1);
                     mPrinter.printString("================================================");
                     mPrinter.printFeed();
                     mPrinter.printFeed();
