@@ -237,11 +237,12 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     return;
                 }
                 try {
+                    mPrinter.setFontStyle(1);
                     mPrinter.setAlignMode(1);
                     try {
                         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                        mPrinter.printRasterBitmap(decodedByte, true);
+                        mPrinter.printRasterBitmap(decodedByte);
                     } catch (IOException e) {
                         Log.e("print", "Print image catch exception: " + e.getMessage());
                     }
@@ -257,6 +258,8 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printFeed();
                     mPrinter.printFeed();
                     mPrinter.printString("================================================");
+                    
+                    mPrinter.printFeed();
                     mPrinter.setAlignMode(0);
                     mPrinter.printString(userName);
                     mPrinter.printFeed();
@@ -264,6 +267,7 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printFeed();
                     mPrinter.printString(userPhone);
                     mPrinter.printFeed();
+
                     mPrinter.setAlignMode(1);
                     mPrinter.printString("================================================");
                     mPrinter.printFeed();
@@ -271,13 +275,15 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
 
                     for (int i = 0; i < items.size(); i++){
                         ReadableMap rmItem = items.getMap(i);
-                        String name = rmItem.getString("name");
+                        String brandName = rmItem.getString("brandName");
+                        String productName = rmItem.getString("productName");
                         String qty = rmItem.getString("qty");
                         String price = rmItem.getString("price");
-                        boolean subName = (name.length() >= 55) ? true : false;
 
                         mPrinter.setAlignMode(0);
-                        mPrinter.printString(qty + " X " + (subName ? name.substring(0, 55) + "..." : name));
+                        mPrinter.printString(qty + " X " + (brandName.length() >= 50 ? brandName.substring(0, 45) + "..." : brandName));
+                        mPrinter.printFeed();
+                        mPrinter.printString("  " + (productName.length() >= 50 ? productName.substring(0, 45) + "..." : productName));
                         mPrinter.printFeed();
                         
                         mPrinter.setAlignMode(2);
@@ -285,7 +291,7 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                         mPrinter.printFeed();
                     }
 
-                    mPrinter.setAlignMode(0);
+                    mPrinter.setAlignMode(1);
                     mPrinter.printString("------------------------------------------------");
                     mPrinter.printFeed();
 
@@ -299,21 +305,23 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     mPrinter.printString("Diskon Ongkir : -Rp." + diskonOngkir);
                     mPrinter.printFeed();
 
-
+                    mPrinter.setAlignMode(1);
                     mPrinter.printString("------------------------------------------------");
-
                     mPrinter.printFeed();
+
+                    mPrinter.setAlignMode(2);
                     mPrinter.printString("Total : Rp." + totalAll);
                     mPrinter.printFeed();
                     mPrinter.printString("Harga sudah termasuk PPN 10%");
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
-                    mPrinter.setFontStyle(1);
+                    mPrinter.setAlignMode(1);
                     mPrinter.printString("================================================");
                     mPrinter.printFeed();
                     mPrinter.printFeed();
 
+                    mPrinter.setFontStyle(1);
                     mPrinter.setAlignMode(0);
                     mPrinter.printString("Metode Pembayaran");
                     mPrinter.printFeed();
@@ -327,21 +335,30 @@ public class RNEsimSdkModule extends ReactContextBaseJavaModule {
                     }
                     mPrinter.printFeed();
                     mPrinter.printString("Batas Waktu Pembayaran  : " + nextDay);
+                    mPrinter.setFontStyle(0);
 
                     mPrinter.printFeed();
                     mPrinter.printFeed();
-                    mPrinter.printString("================================================");
-                    mPrinter.printFeed();
-                    mPrinter.printFeed();
-
                     mPrinter.setAlignMode(1);
+                    mPrinter.printString("================================================");
+                    mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    mPrinter.setFontStyle(1);
                     mPrinter.printString("Cek Email Anda untuk melihat detail pembelanjaan Anda.");
+                    mPrinter.setFontStyle(0);
 
                     mPrinter.printFeed();
                     mPrinter.printFeed();
                     mPrinter.printString("================================================");
-
+                    mPrinter.setFontStyle(1);
+                    
                     mPrinter.printFeed();
+                    mPrinter.printFeed();
+
+                    String qrCode = "https://play.google.com/store/apps/details?id=com.kimiafarma.mediv&hl=en";
+                    mPrinter.printQRCode(qrCode, 4, false);
+
                     mPrinter.printFeed();
                     mPrinter.printString("Terima Kasih");
                     mPrinter.printFeed();
